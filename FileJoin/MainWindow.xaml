@@ -38,6 +38,11 @@
                             Binding="{Binding FilePath}"
                             Header="Path" />
                     </DataGrid.Columns>
+                    <DataGrid.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Add file" />
+                        </ContextMenu>
+                    </DataGrid.ContextMenu>
                 </DataGrid>
             </GroupBox>
             <GroupBox Grid.Row="1" Header="Settings">
