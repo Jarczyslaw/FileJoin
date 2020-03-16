@@ -63,6 +63,8 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="FileEntry.cs" />
+    <Compile Include="MainViewModel.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -93,6 +95,16 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\JToolbox\Desktop\JToolbox.Desktop.Dialogs\JToolbox.Desktop.Dialogs.csproj">
+      <Project>{7519097d-59ff-4717-a043-c083a7aa9a5d}</Project>
+      <Name>JToolbox.Desktop.Dialogs</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JToolbox\WPF\JToolbox.WPF.Core\JToolbox.WPF.Core.csproj">
+      <Project>{56bee9b3-2fcb-46e7-a837-d07f0bfcbd98}</Project>
+      <Name>JToolbox.WPF.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
