@@ -1,14 +1,14 @@
 ﻿using JToolbox.Desktop.Dialogs;
 using JToolbox.WPF.Core.Base;
 using System.Collections.ObjectModel;
-using System.IO;
 
 namespace FileJoin
 {
     public class MainViewModel : BaseViewModel
     {
         private string status;
-        private bool useSeparator;
+        private string separator;
+        private string fileFilter;
         private ObservableCollection<FileEntry> fileEntries = new ObservableCollection<FileEntry>();
         private readonly IDialogsService dialogsService;
 
@@ -35,6 +35,36 @@ namespace FileJoin
             Status = "Status";
         });
 
+        public RelayCommand AddFileCommand => new RelayCommand(() =>
+        {
+            Status = "Status";
+        });
+
+        public RelayCommand AddFolderCommand => new RelayCommand(() =>
+        {
+            Status = "Status";
+        });
+
+        public RelayCommand AddFoldersCommand => new RelayCommand(() =>
+        {
+            Status = "Status";
+        });
+
+        public RelayCommand MoveUpCommand => new RelayCommand(() =>
+        {
+            Status = "Status";
+        });
+
+        public RelayCommand MoveDownCommand => new RelayCommand(() =>
+        {
+            Status = "Status";
+        });
+
+        public RelayCommand RemoveCommand => new RelayCommand(() =>
+        {
+            Status = "Status";
+        });
+
         public ObservableCollection<FileEntry> FileEntries
         {
             get => fileEntries;
@@ -47,10 +77,16 @@ namespace FileJoin
             set => Set(ref status, value);
         }
 
-        public bool UseSeparator
+        public string FileFilter
         {
-            get => useSeparator;
-            set => Set(ref useSeparator, value);
+            get => fileFilter;
+            set => Set(ref fileFilter, value);
+        }
+
+        public string Separator
+        {
+            get => separator;
+            set => Set(ref separator, value);
         }
     }
 }

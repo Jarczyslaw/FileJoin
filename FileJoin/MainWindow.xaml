@@ -23,32 +23,79 @@
             </Grid.RowDefinitions>
 
             <GroupBox Header="Files">
-                <DataGrid
-                    Margin="3"
-                    AutoGenerateColumns="False"
-                    IsReadOnly="True"
-                    ItemsSource="{Binding FileEntries, Mode=OneWay}">
-                    <DataGrid.Columns>
-                        <DataGridTextColumn
-                            Width="200"
-                            Binding="{Binding FileName}"
-                            Header="File name" />
-                        <DataGridTextColumn
-                            Width="*"
-                            Binding="{Binding FilePath}"
-                            Header="Path" />
-                    </DataGrid.Columns>
-                    <DataGrid.ContextMenu>
-                        <ContextMenu>
-                            <MenuItem Header="Add file" />
-                        </ContextMenu>
-                    </DataGrid.ContextMenu>
-                </DataGrid>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <DataGrid
+                        Margin="3"
+                        AutoGenerateColumns="False"
+                        IsReadOnly="True"
+                        ItemsSource="{Binding FileEntries, Mode=OneWay}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn
+                                Width="200"
+                                Binding="{Binding FileName}"
+                                Header="File name" />
+                            <DataGridTextColumn
+                                Width="*"
+                                Binding="{Binding FilePath}"
+                                Header="Path" />
+                        </DataGrid.Columns>
+                        <DataGrid.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="Add file" />
+                            </ContextMenu>
+                        </DataGrid.ContextMenu>
+                    </DataGrid>
+
+                    <UniformGrid
+                        Grid.Row="1"
+                        Columns="3"
+                        Rows="2">
+                        <Button Command="{Binding AddFileCommand}" Content="Add file" />
+                        <Button Command="{Binding AddFolderCommand}" Content="Add folder" />
+                        <Button Command="{Binding AddFoldersCommand}" Content="Add folders recursive" />
+                        <Button Command="{Binding MoveUpCommand}" Content="Move up" />
+                        <Button Command="{Binding MoveDownCommand}" Content="Move down" />
+                        <Button Command="{Binding RemoveCommand}" Content="Remove" />
+                    </UniformGrid>
+                </Grid>
+
             </GroupBox>
             <GroupBox Grid.Row="1" Header="Settings">
-                <StackPanel>
-                    <CheckBox Content="Use separator" IsChecked="{Binding UseSeparator}" />
-                </StackPanel>
+                <Grid>
+                    <Grid.Resources>
+                        <Style TargetType="TextBox">
+                            <Setter Property="Margin" Value="3" />
+                        </Style>
+                    </Grid.Resources>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <Label Content="File filter:" />
+                    <TextBox Grid.Column="1" Text="{Binding FileFilter}" />
+
+                    <Label Grid.Row="1" Content="Separator:" />
+                    <TextBox
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Height="90"
+                        AcceptsReturn="True"
+                        HorizontalScrollBarVisibility="Visible"
+                        Text="{Binding Separator}"
+                        TextWrapping="NoWrap"
+                        VerticalScrollBarVisibility="Visible" />
+                </Grid>
             </GroupBox>
             <Button
                 Grid.Row="2"
