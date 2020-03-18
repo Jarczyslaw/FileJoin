@@ -2,6 +2,7 @@
     x:Class="FileJoin.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:JToolbox.WPF.UI.Controls;assembly=JToolbox.WPF.UI"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:FileJoin"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -29,11 +30,17 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
-                    <DataGrid
+                    <local:FileEntriesGrid
+                        x:Name="grid"
                         Margin="3"
                         AutoGenerateColumns="False"
+                        CanUserResizeRows="False"
                         IsReadOnly="True"
-                        ItemsSource="{Binding FileEntries, Mode=OneWay}">
+                        ItemsSource="{Binding FileEntries, Mode=OneWay}"
+                        RowHeaderWidth="0"
+                        SelectedItemsEx="{Binding SelectedFileEntries, Mode=TwoWay}"
+                        SelectionMode="Extended"
+                        SelectionUnit="FullRow">
                         <DataGrid.Columns>
                             <DataGridTextColumn
                                 Width="200"
@@ -49,13 +56,17 @@
                                 <MenuItem Header="Add file" />
                             </ContextMenu>
                         </DataGrid.ContextMenu>
-                    </DataGrid>
+                    </local:FileEntriesGrid>
 
                     <UniformGrid
                         Grid.Row="1"
                         Columns="3"
                         Rows="2">
-                        <Button Command="{Binding AddFileCommand}" Content="Add file" />
+                        <Button
+                            x:Name="btnAddFile"
+                            Click="btnAddFile_Click"
+                            Command="{Binding AddFileCommand}"
+                            Content="Add file" />
                         <Button Command="{Binding AddFolderCommand}" Content="Add folder" />
                         <Button Command="{Binding AddFoldersCommand}" Content="Add folders recursive" />
                         <Button Command="{Binding MoveUpCommand}" Content="Move up" />

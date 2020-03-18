@@ -1,5 +1,6 @@
 ﻿using JToolbox.Desktop.Dialogs;
 using JToolbox.WPF.Core.Base;
+using System.Collections;
 using System.Collections.ObjectModel;
 
 namespace FileJoin
@@ -11,6 +12,7 @@ namespace FileJoin
         private string fileFilter;
         private ObservableCollection<FileEntry> fileEntries = new ObservableCollection<FileEntry>();
         private readonly IDialogsService dialogsService;
+        private ObservableCollection<FileEntry> selectedFileEntries;
 
         public MainViewModel()
         {
@@ -32,7 +34,7 @@ namespace FileJoin
 
         public RelayCommand MergeCommand => new RelayCommand(() =>
         {
-            Status = "Status";
+            SelectedFileEntries = fileEntries;
         });
 
         public RelayCommand AddFileCommand => new RelayCommand(() =>
@@ -64,6 +66,12 @@ namespace FileJoin
         {
             Status = "Status";
         });
+
+        public ObservableCollection<FileEntry> SelectedFileEntries
+        {
+            get => selectedFileEntries;
+            set => Set(ref selectedFileEntries, value);
+        }
 
         public ObservableCollection<FileEntry> FileEntries
         {

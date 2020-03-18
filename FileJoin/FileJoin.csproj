@@ -63,6 +63,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="FileEntriesGrid.cs" />
     <Compile Include="FileEntry.cs" />
     <Compile Include="MainViewModel.cs" />
     <Compile Include="MainWindow.xaml.cs">
@@ -104,6 +105,10 @@
     <ProjectReference Include="..\JToolbox\WPF\JToolbox.WPF.Core\JToolbox.WPF.Core.csproj">
       <Project>{56bee9b3-2fcb-46e7-a837-d07f0bfcbd98}</Project>
       <Name>JToolbox.WPF.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JToolbox\WPF\JToolbox.WPF.UI\JToolbox.WPF.UI.csproj">
+      <Project>{9594d7ee-c5d6-4f07-8f3e-63b7c83e21d0}</Project>
+      <Name>JToolbox.WPF.UI</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

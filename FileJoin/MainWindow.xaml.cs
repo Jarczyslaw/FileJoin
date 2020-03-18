@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Diagnostics;
+using System.Windows;
 
 namespace FileJoin
 {
@@ -8,6 +9,11 @@ namespace FileJoin
         {
             InitializeComponent();
             DataContext = new MainViewModel();
+        }
+
+        private void btnAddFile_Click(object sender, RoutedEventArgs e)
+        {
+            Debug.WriteLine(grid.SelectedItems.Count);
         }
     }
 }
