@@ -1,15 +1,19 @@
 ﻿using JToolbox.Desktop.Dialogs;
 using JToolbox.WPF.Core.Base;
-using System.Collections;
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace FileJoin
 {
     public class MainViewModel : BaseViewModel
     {
         private string status;
-        private string separator;
-        private string fileFilter;
+        private string separator = "##### {number} - {fileName} #####";
+        private string fileFilter = @"^\w+\.\w{3}$";
         private ObservableCollection<FileEntry> fileEntries = new ObservableCollection<FileEntry>();
         private readonly IDialogsService dialogsService;
         private ObservableCollection<FileEntry> selectedFileEntries;
@@ -17,19 +21,6 @@ namespace FileJoin
         public MainViewModel()
         {
             dialogsService = new DialogsService();
-
-            FileEntries.Add(new FileEntry
-            {
-                FullPath = @"e:\TEMP\file1.pdf"
-            });
-            FileEntries.Add(new FileEntry
-            {
-                FullPath = @"e:\TEMP\file2.reg"
-            });
-            FileEntries.Add(new FileEntry
-            {
-                FullPath = @"e:\TEMP\file3.pdf"
-            });
         }
 
         public RelayCommand MergeCommand => new RelayCommand(() =>
@@ -37,19 +28,54 @@ namespace FileJoin
             SelectedFileEntries = fileEntries;
         });
 
-        public RelayCommand AddFileCommand => new RelayCommand(() =>
+        public RelayCommand AddFilesCommand => new RelayCommand(() =>
         {
-            Status = "Status";
+            try
+            {
+                var selectedFiles = dialogsService.OpenFiles("Add files");
+                if (selectedFiles != null)
+                {
+                    AddFiles(selectedFiles);
+                }
+            }
+            catch (Exception exc)
+            {
+                dialogsService.ShowException(exc, "Error while adding files");
+            }
         });
 
         public RelayCommand AddFolderCommand => new RelayCommand(() =>
         {
-            Status = "Status";
+            try
+            {
+                var selectedFolder = dialogsService.OpenFolder("Open folder");
+                if (!string.IsNullOrEmpty(selectedFolder))
+                {
+                    var files = Directory.EnumerateFiles(selectedFolder);
+                    AddFiles(files);
+                }
+            }
+            catch (Exception exc)
+            {
+                dialogsService.ShowException(exc, "Error while adding folder");
+            }
         });
 
         public RelayCommand AddFoldersCommand => new RelayCommand(() =>
         {
-            Status = "Status";
+            try
+            {
+                var selectedFolder = dialogsService.OpenFolder("Open folder");
+                if (!string.IsNullOrEmpty(selectedFolder))
+                {
+                    var files = Directory.EnumerateFiles(selectedFolder, "*.*", SearchOption.AllDirectories);
+                    AddFiles(files);
+                }
+            }
+            catch (Exception exc)
+            {
+                dialogsService.ShowException(exc, "Error while adding folders");
+            }
         });
 
         public RelayCommand MoveUpCommand => new RelayCommand(() =>
@@ -64,7 +90,15 @@ namespace FileJoin
 
         public RelayCommand RemoveCommand => new RelayCommand(() =>
         {
-            Status = "Status";
+            if (SelectedFileEntries != null && SelectedFileEntries.Count != 0)
+            {
+                var count = SelectedFileEntries.Count;
+                foreach (var selectedFile in SelectedFileEntries)
+                {
+                    FileEntries.Remove(selectedFile);
+                }
+                Status = $"Removed {count} files";
+            }
         });
 
         public ObservableCollection<FileEntry> SelectedFileEntries
@@ -95,6 +129,43 @@ namespace FileJoin
         {
             get => separator;
             set => Set(ref separator, value);
+        }
+
+        private void AddFiles(IEnumerable<string> files)
+        {
+            if (files != null)
+            {
+                var filteredFiles = FilterFiles(files);
+                foreach (var file in filteredFiles)
+                {
+                    FileEntries.Add(new FileEntry(file));
+                }
+                RenumarateFiles();
+                Status = $"Added {filteredFiles.Count()} files";
+            }
+        }
+
+        private IEnumerable<string> FilterFiles(IEnumerable<string> files)
+        {
+            if (string.IsNullOrEmpty(FileFilter))
+            {
+                return files;
+            }
+            else
+            {
+                var filterRegex = new Regex(FileFilter);
+                return files.Where(f => filterRegex.IsMatch(Path.GetFileName(f)));
+            }
+        }
+
+        private void RenumarateFiles()
+        {
+            var number = 1;
+            foreach (var file in FileEntries)
+            {
+                file.Number = number;
+                number++;
+            }
         }
     }
 }

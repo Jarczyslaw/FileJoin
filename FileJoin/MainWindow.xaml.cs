@@ -10,10 +10,5 @@ namespace FileJoin
             InitializeComponent();
             DataContext = new MainViewModel();
         }
-
-        private void btnAddFile_Click(object sender, RoutedEventArgs e)
-        {
-            Debug.WriteLine(grid.SelectedItems.Count);
-        }
     }
 }

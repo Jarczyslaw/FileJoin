@@ -110,12 +110,7 @@ namespace JToolbox.Desktop.Dialogs
             }
         }
 
-        public string OpenFile(string title, string initialDirectory, DialogFilterPair filter)
-        {
-            return OpenFile(title, initialDirectory, new List<DialogFilterPair> { filter });
-        }
-
-        public string OpenFile(string title, string initialDirectory, List<DialogFilterPair> filters)
+        public string OpenFile(string title, string initialDirectory = null, List<DialogFilterPair> filters = null)
         {
             var builder = new CommonOpenDialogBuilder()
                 .Initialize(title, initialDirectory)
@@ -133,12 +128,7 @@ namespace JToolbox.Desktop.Dialogs
             return result;
         }
 
-        public List<string> OpenFiles(string title, string initialDirectory, DialogFilterPair filter)
-        {
-            return OpenFiles(title, initialDirectory, new List<DialogFilterPair> { filter });
-        }
-
-        public List<string> OpenFiles(string title, string initialDirectory, List<DialogFilterPair> filters)
+        public List<string> OpenFiles(string title, string initialDirectory = null, List<DialogFilterPair> filters = null)
         {
             var builder = new CommonOpenDialogBuilder()
                 .Initialize(title, initialDirectory)
@@ -156,7 +146,7 @@ namespace JToolbox.Desktop.Dialogs
             return result;
         }
 
-        public string OpenFolder(string title, string initialDirectory)
+        public string OpenFolder(string title, string initialDirectory = null)
         {
             var builder = new CommonOpenDialogBuilder()
                 .Initialize(title, initialDirectory)
@@ -173,7 +163,7 @@ namespace JToolbox.Desktop.Dialogs
             return result;
         }
 
-        public string SaveFile(string title, string initialDirectory, string defaultFileName, DialogFilterPair filter)
+        public string SaveFile(string title, string initialDirectory, string defaultFileName = null, DialogFilterPair filter = null)
         {
             var builder = new CommonSaveDialogBuilder()
                 .Initialize(title, initialDirectory)
