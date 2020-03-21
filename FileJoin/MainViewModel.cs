@@ -13,8 +13,9 @@ namespace FileJoin
     public class MainViewModel : BaseViewModel
     {
         private string status;
-        private string separator = "##### {number} - {fileName} #####";
-        private string fileFilter = @"^\w+\.\w{3}$";
+        private string separator = "##### {number} - {fileName} ({filePath}) #####";
+        private string filesFilter = @"^\w+\.\w{3}$";
+        private int entersAfter = 3;
         private ObservableCollection<FileEntry> fileEntries = new ObservableCollection<FileEntry>();
         private readonly IDialogsService dialogsService;
         private ObservableCollection<FileEntry> selectedFileEntries;
@@ -26,7 +27,17 @@ namespace FileJoin
 
         public RelayCommand MergeCommand => new RelayCommand(() =>
         {
-            SelectedFileEntries = fileEntries;
+            if (FileEntries.Count == 0)
+            {
+                dialogsService.ShowError("No files selected");
+                return;
+            }
+
+            var result = string.Empty;
+            foreach (var entry in FileEntries)
+            {
+                var file = string.Empty;
+            }
         });
 
         public RelayCommand AddFilesCommand => new RelayCommand(() =>
@@ -149,10 +160,16 @@ namespace FileJoin
             set => Set(ref status, value);
         }
 
-        public string FileFilter
+        public int EntersAfter
         {
-            get => fileFilter;
-            set => Set(ref fileFilter, value);
+            get => entersAfter;
+            set => Set(ref entersAfter, value);
+        }
+
+        public string FilesFilter
+        {
+            get => filesFilter;
+            set => Set(ref filesFilter, value);
         }
 
         public string Separator
@@ -184,13 +201,13 @@ namespace FileJoin
 
         private IEnumerable<string> FilterFiles(IEnumerable<string> files)
         {
-            if (string.IsNullOrEmpty(FileFilter))
+            if (string.IsNullOrEmpty(FilesFilter))
             {
                 return files;
             }
             else
             {
-                var filterRegex = new Regex(FileFilter);
+                var filterRegex = new Regex(FilesFilter);
                 return files.Where(f => filterRegex.IsMatch(Path.GetFileName(f)));
             }
         }

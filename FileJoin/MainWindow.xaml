@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:FileJoin"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:toolkit="http://schemas.xceed.com/wpf/xaml/toolkit"
     Title="MainWindow"
     Width="600"
     Height="800"
@@ -90,14 +91,31 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
                     <Label Content="File filter:" />
-                    <TextBox Grid.Column="1" Text="{Binding FileFilter}" />
-
-                    <Label Grid.Row="1" Content="Separator:" />
                     <TextBox
+                        Grid.Column="1"
+                        Width="200"
+                        HorizontalAlignment="Left"
+                        Text="{Binding FilesFilter}" />
+
+                    <Label Grid.Row="1" Content="New lines after file:" />
+                    <toolkit:IntegerUpDown
                         Grid.Row="1"
+                        Grid.Column="1"
+                        Width="200"
+                        Margin="3"
+                        HorizontalAlignment="Left"
+                        Maximum="10"
+                        Minimum="0"
+                        TextAlignment="Left"
+                        Value="{Binding EntersAfter}" />
+
+                    <Label Grid.Row="2" Content="Separator:" />
+                    <TextBox
+                        Grid.Row="2"
                         Grid.Column="1"
                         Height="90"
                         AcceptsReturn="True"
