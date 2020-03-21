@@ -1,4 +1,5 @@
-﻿using JToolbox.Desktop.Dialogs;
+﻿using JToolbox.Core.Extensions;
+using JToolbox.Desktop.Dialogs;
 using JToolbox.WPF.Core.Base;
 using System;
 using System.Collections.Generic;
@@ -80,12 +81,40 @@ namespace FileJoin
 
         public RelayCommand MoveUpCommand => new RelayCommand(() =>
         {
-            Status = "Status";
+            var selectedEntries = SelectedFileEntries.OrderBy(s => s.Number);
+            foreach (var entry in selectedEntries)
+            {
+                var index = FileEntries.IndexOf(entry);
+                if (index > 0)
+                {
+                    var entryToShift = FileEntries[index - 1];
+                    if (!selectedEntries.Contains(entryToShift))
+                    {
+                        FileEntries.ShiftLeft(index);
+                    }
+                }
+            }
+            RenumarateFiles();
         });
 
         public RelayCommand MoveDownCommand => new RelayCommand(() =>
         {
-            Status = "Status";
+            var selectedEntries = SelectedFileEntries.OrderBy(s => s.Number)
+                .ToList();
+            for (int i = selectedEntries.Count - 1; i >= 0; i--)
+            {
+                var entry = selectedEntries[i];
+                var index = FileEntries.IndexOf(entry);
+                if (index < FileEntries.Count - 1)
+                {
+                    var entryToShift = FileEntries[index + 1];
+                    if (!selectedEntries.Contains(entryToShift))
+                    {
+                        FileEntries.ShiftRight(index);
+                    }
+                }
+            }
+            RenumarateFiles();
         });
 
         public RelayCommand RemoveCommand => new RelayCommand(() =>
@@ -97,6 +126,7 @@ namespace FileJoin
                 {
                     FileEntries.Remove(selectedFile);
                 }
+                RenumarateFiles();
                 Status = $"Removed {count} files";
             }
         });
@@ -141,7 +171,14 @@ namespace FileJoin
                     FileEntries.Add(new FileEntry(file));
                 }
                 RenumarateFiles();
-                Status = $"Added {filteredFiles.Count()} files";
+
+                var diff = files.Count() - filteredFiles.Count();
+                var message = $"Added {filteredFiles.Count()} files";
+                if (diff > 0)
+                {
+                    message += $" ({diff} filtered)";
+                }
+                Status = message;
             }
         }
 
