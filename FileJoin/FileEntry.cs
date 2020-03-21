@@ -25,5 +25,6 @@ namespace FileJoin
         public string FullPath { get; set; }
         public string FileName => Path.GetFileName(FullPath);
         public string FilePath => Path.GetDirectoryName(FullPath);
+        public string Extension => Path.GetExtension(FullPath);
     }
 }

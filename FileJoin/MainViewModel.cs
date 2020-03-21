@@ -15,9 +15,9 @@ namespace FileJoin
         private string status;
         private string separator = "##### {number} - {fileName} ({filePath}) #####";
         private string filesFilter = @"^\w+\.\w{3}$";
-        private int entersAfter = 3;
-        private ObservableCollection<FileEntry> fileEntries = new ObservableCollection<FileEntry>();
+        private int entersAfter = 2;
         private readonly IDialogsService dialogsService;
+        private ObservableCollection<FileEntry> fileEntries = new ObservableCollection<FileEntry>();
         private ObservableCollection<FileEntry> selectedFileEntries;
 
         public MainViewModel()
@@ -27,16 +27,32 @@ namespace FileJoin
 
         public RelayCommand MergeCommand => new RelayCommand(() =>
         {
-            if (FileEntries.Count == 0)
+            try
             {
-                dialogsService.ShowError("No files selected");
-                return;
-            }
+                if (FileEntries.Count == 0)
+                {
+                    dialogsService.ShowError("No files selected");
+                    return;
+                }
 
-            var result = string.Empty;
-            foreach (var entry in FileEntries)
+                var mergedFile = PrepareMergedFile();
+
+                DialogFilterPair dialogFilterPair = null;
+                var extension = GetExtensionFromFiles();
+                if (!string.IsNullOrEmpty(extension))
+                {
+                    dialogFilterPair = new DialogFilterPair(extension);
+                }
+                var outputFile = dialogsService.SaveFile("Save merged file", null, null, dialogFilterPair);
+                if (!string.IsNullOrEmpty(outputFile))
+                {
+                    File.WriteAllText(outputFile, mergedFile);
+                    Status = $"Merged {FileEntries.Count} into {outputFile}";
+                }
+            }
+            catch (Exception exc)
             {
-                var file = string.Empty;
+                dialogsService.ShowException(exc, "File merging error");
             }
         });
 
@@ -178,6 +194,42 @@ namespace FileJoin
             set => Set(ref separator, value);
         }
 
+        private string PrepareMergedFile()
+        {
+            var result = string.Empty;
+            for (int i = 0; i < FileEntries.Count; i++)
+            {
+                var fileEntry = fileEntries[i];
+                var file = string.Empty;
+                if (!string.IsNullOrEmpty(Separator))
+                {
+                    file += PrepareSeparator(fileEntry) + Environment.NewLine;
+                }
+
+                file += File.ReadAllText(fileEntry.FullPath);
+
+                if (i != FileEntries.Count - 1)
+                {
+                    for (int j = 0; j < entersAfter; j++)
+                    {
+                        file += Environment.NewLine;
+                    }
+                }
+
+                result += file;
+            }
+            return result;
+        }
+
+        private string PrepareSeparator(FileEntry fileEntry)
+        {
+            var result = Separator;
+            result = result.Replace("{number}", fileEntry.Number.ToString());
+            result = result.Replace("{fileName}", fileEntry.FileName);
+            result = result.Replace("{filePath}", fileEntry.FilePath);
+            return result;
+        }
+
         private void AddFiles(IEnumerable<string> files)
         {
             if (files != null)
@@ -220,6 +272,11 @@ namespace FileJoin
                 file.Number = number;
                 number++;
             }
+        }
+
+        private string GetExtensionFromFiles()
+        {
+            return FileEntries.Select(s => s.Extension).Distinct().Count() == 1 ? FileEntries[0].Extension : null;
         }
     }
 }
